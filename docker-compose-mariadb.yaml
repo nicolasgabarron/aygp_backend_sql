@@ -1,0 +1,28 @@
+# Defino versión.
+version: '3.4'
+
+# Defino servicios.
+services:
+  db:
+    image: mariadb:10
+    container_name: aygp_mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: 020201
+    networks:
+      - aygp
+    volumes:
+      - aygp_mariadb:/var/lib/mysql
+  
+  adminer:
+    image: adminer:4
+    ports: 
+      - 8080:8080
+    restart: always
+    networks:
+      - aygp
+# Defino redes.
+networks:
+  aygp: # Defino volúmenes.
+volumes:
+  aygp_mariadb:

@@ -17,7 +17,7 @@ public class Usuario {
     private Long id;
 
     @Column(name = "nombreUsuario", nullable = false, length = 30)
-    private String nombreUsuario;
+    private String username;
 
     @Column(name = "email", nullable = false, length = 100)
     private String email;
@@ -37,8 +37,8 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombreUsuario, String email, String password) {
-        this.nombreUsuario = nombreUsuario;
+    public Usuario(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }
@@ -53,12 +53,12 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getUsername() {
+        return username;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

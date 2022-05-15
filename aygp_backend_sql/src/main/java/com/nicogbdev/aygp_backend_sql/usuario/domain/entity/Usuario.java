@@ -1,8 +1,10 @@
 package com.nicogbdev.aygp_backend_sql.usuario.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nicogbdev.aygp_backend_sql.rol.domain.entity.Rol;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,12 +27,26 @@ public class Usuario {
     @Column(name = "password", nullable = false, length = 120)
     private String password;
 
+    @Column(name = "nombre", nullable = false, length = 120)
+    private String nombre;
+
+    @Column(name = "apellidos", nullable = false, length = 250)
+    private String apellidos;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    @Column(name = "fecha_nacimiento", nullable = false)
+    private Date fechaNacimiento;
+
+    @Column(name = "ciudad_nacimiento", nullable = false, length = 80)
+    private String ciudadNacimiento;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_roles",
     joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> roles = new HashSet<>();
 
+    // TODO: Añadir Sets de diferentes entidades.
 
     // Constructores.
 
@@ -83,5 +99,37 @@ public class Usuario {
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getCiudadNacimiento() {
+        return ciudadNacimiento;
+    }
+
+    public void setCiudadNacimiento(String ciudadNacimiento) {
+        this.ciudadNacimiento = ciudadNacimiento;
     }
 }

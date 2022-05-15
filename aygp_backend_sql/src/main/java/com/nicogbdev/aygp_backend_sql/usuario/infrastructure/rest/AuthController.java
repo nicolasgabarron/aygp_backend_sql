@@ -10,7 +10,8 @@ import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.requests.LoginRequest;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.requests.SignupRequest;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses.MessageResponse;
-import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses.UserInfoResponse;
+import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses.UsuarioInfoResponse;
+import com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses.UsuarioResponse;
 import com.nicogbdev.aygp_backend_sql.usuario.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Role;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class AuthController {
 
     // Endpoints.
 
-    //TODO: Revisar devolución ? por Usuario o UserInfoResponse.
+    //TODO: Revisar devolución ? por Usuario o UsuarioInfoResponse.
     @PostMapping(value = "/signin")
     public ResponseEntity<?> autenticarUsuario(@Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -67,25 +68,30 @@ public class AuthController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), rolesUsuario));
+                .body(new UsuarioInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), rolesUsuario));
     }
 
 
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<?> registrarUsuario(@Valid @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<UsuarioResponse> registrarUsuario(@Valid @RequestBody SignupRequest signupRequest){
         // Comprobación nombre de usuario.
         if (usuarioRepository.existsByUsername(signupRequest.getUsername())) {
-            return new ResponseEntity<>("El nombre de usuario especificado ya existe.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponse("El nombre de usuario especificado ya existe."),HttpStatus.BAD_REQUEST);
         }
 
         // Comprobación email.
         if (usuarioRepository.existsByEmail(signupRequest.getEmail())){
-            return new ResponseEntity<>("El email especificado ya existe.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponse("El email especificado ya existe."), HttpStatus.BAD_REQUEST);
         }
 
         // Creo el nuevo usuario.
         Usuario usuarioCrear = new Usuario(signupRequest.getUsername(), signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()));
+
+        usuarioCrear.setNombre(signupRequest.getNombre());
+        usuarioCrear.setApellidos(signupRequest.getApellidos());
+        usuarioCrear.setFechaNacimiento(signupRequest.getFechaNacimiento());
+        usuarioCrear.setCiudadNacimiento(signupRequest.getCiudadNacimiento());
 
         Set<String> strRoles = signupRequest.getRoles();
         Set<Rol> roles = new HashSet<>();
@@ -119,7 +125,18 @@ public class AuthController {
         usuarioCrear.setRoles(roles);
         Usuario usuario = usuarioService.crearUsuario(usuarioCrear);
 
-        return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+        // TODO: Cambiar por mappers.
+        UsuarioInfoResponse respuesta = new UsuarioInfoResponse();
+        respuesta.setId(usuario.getId());
+        respuesta.setEmail(usuario.getEmail());
+        respuesta.setNombre(usuario.getNombre());
+        respuesta.setApellidos(usuario.getApellidos());
+        respuesta.setFechaNacimiento(usuario.getFechaNacimiento());
+        respuesta.setCiudadNacimiento(usuario.getCiudadNacimiento());
+        respuesta.setRoles(new ArrayList<>(strRoles));
+
+
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
 
     }
 

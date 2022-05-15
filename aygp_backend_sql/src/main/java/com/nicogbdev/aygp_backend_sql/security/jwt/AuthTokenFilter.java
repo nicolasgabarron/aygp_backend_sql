@@ -28,7 +28,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt == null && jwtUtils.validateJwtToken(jwt)) {
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -41,6 +41,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             logger.error("No se ha podido establecer la autenticación: {}", e);
         }
 
+
+        // TODO: SALTA EXCEPCIÓN USER IS DISABLED. https://stackoverflow.com/questions/39139352/spring-security-userdetails-org-springframework-security-authentication-disable
         filterChain.doFilter(request, response);
     }
 

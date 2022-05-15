@@ -53,9 +53,8 @@ public class AuthController {
 
     // Endpoints.
 
-    //TODO: Revisar devolución ? por Usuario o UsuarioInfoResponse.
     @PostMapping(value = "/signin")
-    public ResponseEntity<?> autenticarUsuario(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<UsuarioResponse> autenticarUsuario(@Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -67,10 +66,25 @@ public class AuthController {
                 .map(rol -> rol.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new UsuarioInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), rolesUsuario));
-    }
+        // TODO: Cambiar por mapper.
+        // Obtengo todos los datos del usuario.
+        Usuario usuario = usuarioService.obtenerUsuarioPorId(userDetails.getId()).get();
 
+        UsuarioInfoResponse respuesta = new UsuarioInfoResponse();
+        respuesta.setId(usuario.getId());
+        respuesta.setUsername(usuario.getUsername());
+        respuesta.setEmail(usuario.getEmail());
+        respuesta.setNombre(usuario.getNombre());
+        respuesta.setApellidos(usuario.getApellidos());
+        respuesta.setFechaNacimiento(usuario.getFechaNacimiento());
+        respuesta.setCiudadNacimiento(usuario.getCiudadNacimiento());
+        respuesta.setRoles(rolesUsuario);
+
+
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(respuesta);
+    }
 
 
     @PostMapping(value = "/signup")

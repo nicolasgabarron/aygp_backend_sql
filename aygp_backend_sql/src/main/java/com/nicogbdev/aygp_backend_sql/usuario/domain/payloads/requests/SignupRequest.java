@@ -1,9 +1,7 @@
 package com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.requests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.nicogbdev.aygp_backend_sql.rol.domain.entity.Rol;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.Set;
 

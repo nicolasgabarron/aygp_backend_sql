@@ -12,7 +12,6 @@ import java.util.Set;
 @Table(name = "usuarios",
         uniqueConstraints = {@UniqueConstraint(columnNames = "nombreUsuario"), @UniqueConstraint(columnNames = "email")})
 public class Usuario {
-    // TODO: Añadir las propiedades que faltan.
     // Propiedades.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

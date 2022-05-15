@@ -1,11 +1,9 @@
 package com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.nicogbdev.aygp_backend_sql.rol.domain.entity.Rol;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class UsuarioInfoResponse extends UsuarioResponse{
     // Propiedades.

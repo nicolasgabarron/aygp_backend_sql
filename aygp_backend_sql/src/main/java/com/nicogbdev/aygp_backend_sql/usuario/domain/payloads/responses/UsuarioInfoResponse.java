@@ -1,17 +1,16 @@
-package com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.requests;
+package com.nicogbdev.aygp_backend_sql.usuario.domain.payloads.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
-public class SignupRequest {
+public class UsuarioInfoResponse extends UsuarioResponse{
     // Propiedades.
+    private Long id;
     private String username;
 
     private String email;
-
-    private String password;
 
     private String nombre;
 
@@ -22,11 +21,31 @@ public class SignupRequest {
 
     private String ciudadNacimiento;
 
-    private Set<String> roles;
+    private List<String> roles;
 
+    // Constructor
+
+
+    public UsuarioInfoResponse() {
+    }
+
+    public UsuarioInfoResponse(Long id, String username, String email, List<String> roles) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.roles = roles;
+    }
 
 
     // Getters y setters.
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -44,19 +63,11 @@ public class SignupRequest {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<String> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 

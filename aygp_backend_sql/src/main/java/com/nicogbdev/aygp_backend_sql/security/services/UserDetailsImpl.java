@@ -1,5 +1,6 @@
 package com.nicogbdev.aygp_backend_sql.security.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,15 +17,18 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
+    private String email;
+    @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
     // Constructor.
 
 
-    public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
@@ -38,6 +42,7 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 usuario.getId(),
                 usuario.getUsername(),
+                usuario.getEmail(),
                 usuario.getPassword(),
                 authorities
         );
@@ -75,7 +80,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     @Override
@@ -106,5 +111,13 @@ public class UserDetailsImpl implements UserDetails {
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

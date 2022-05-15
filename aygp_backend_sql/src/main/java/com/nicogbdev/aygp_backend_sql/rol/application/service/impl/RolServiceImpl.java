@@ -5,10 +5,12 @@ import com.nicogbdev.aygp_backend_sql.rol.domain.entity.ERol;
 import com.nicogbdev.aygp_backend_sql.rol.domain.entity.Rol;
 import com.nicogbdev.aygp_backend_sql.rol.infrastructure.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RolServiceImpl implements RolService {
 
     // Inyección de dependencias.

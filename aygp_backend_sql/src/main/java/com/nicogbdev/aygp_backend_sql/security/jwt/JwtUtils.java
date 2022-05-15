@@ -30,7 +30,7 @@ public class JwtUtils {
     public String getJwtFromCookies(HttpServletRequest request){
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
 
-        if (cookie == null) {
+        if (cookie != null) {
             return cookie.getValue();
         }else
             return null;
@@ -49,12 +49,12 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(authToken);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         }catch (SignatureException e){
             logger.error("Firma del JWT inválida: {}", e.getMessage());
@@ -63,7 +63,7 @@ public class JwtUtils {
         }catch (ExpiredJwtException e){
             logger.error("Token JWT expirado: {}", e.getMessage());
         } catch (UnsupportedJwtException e){
-            logger.error("El token JWT no está soportado: {}", e.getMessage());
+            logger.error("El token JWT no está soportado: {}", e);
         }catch (IllegalArgumentException e){
             logger.error("No se ha especificado el token JWT: {}", e.getMessage());
         }
@@ -76,7 +76,7 @@ public class JwtUtils {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.ES256, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 

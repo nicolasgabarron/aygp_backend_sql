@@ -156,10 +156,10 @@ public class AuthController {
 
 
     @PostMapping(value = "/logout")
-    public ResponseEntity<?> logoutUsuario(){
+    public ResponseEntity<UsuarioResponse> logoutUsuario(){
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("Has salido correctamente.");
+                .body(new MessageResponse("Has salido correctamente."));
     }
 }

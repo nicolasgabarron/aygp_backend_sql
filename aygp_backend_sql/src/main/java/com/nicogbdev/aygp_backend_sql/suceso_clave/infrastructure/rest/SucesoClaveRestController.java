@@ -69,6 +69,8 @@ public class SucesoClaveRestController {
         return new ResponseEntity<>(sucesoGuardar, HttpStatus.CREATED);
     }
 
+    // TODO: Implementar endpoint para modificar un Suceso Clave.
+
     @DeleteMapping(value = "/sucesos/{idSuceso}")
     public ResponseEntity<Void> eliminarSucesoClave(@CookieValue(value = "nicogbdev_jwt") String jwt, Long idSuceso){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);

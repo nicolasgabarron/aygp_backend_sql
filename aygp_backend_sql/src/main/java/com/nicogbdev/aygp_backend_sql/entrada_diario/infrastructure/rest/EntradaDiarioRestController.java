@@ -69,6 +69,8 @@ public class EntradaDiarioRestController {
         return new ResponseEntity<>(entradaDiario, HttpStatus.OK);
     }
 
+    // TODO: Implementar endpoint para modificar una Entrada de Diario.
+
     @DeleteMapping(value = "/entradas/eliminar/{idEntrada}")
     public ResponseEntity<Void> eliminarEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt, @PathVariable Long idEntrada){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);

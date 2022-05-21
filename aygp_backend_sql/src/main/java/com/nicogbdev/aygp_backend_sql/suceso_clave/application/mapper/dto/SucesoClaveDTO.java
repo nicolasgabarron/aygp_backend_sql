@@ -1,4 +1,4 @@
-package com.nicogbdev.aygp_backend_sql.suceso_clave.application.dto;
+package com.nicogbdev.aygp_backend_sql.suceso_clave.application.mapper.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,6 +12,7 @@ public class SucesoClaveDTO {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaCreacion;
     // TODO: Valorar poner JSONFormat por el tema de la hora de creación para el frontend.
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaSuceso;
     private String titulo;
     private String contenido;

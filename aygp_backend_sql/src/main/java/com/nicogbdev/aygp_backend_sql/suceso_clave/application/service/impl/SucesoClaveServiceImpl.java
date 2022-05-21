@@ -3,7 +3,7 @@ package com.nicogbdev.aygp_backend_sql.suceso_clave.application.service.impl;
 import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.SucesoClaveNotFoundException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
-import com.nicogbdev.aygp_backend_sql.suceso_clave.application.dto.SucesoClaveDTO;
+import com.nicogbdev.aygp_backend_sql.suceso_clave.application.mapper.dto.SucesoClaveDTO;
 import com.nicogbdev.aygp_backend_sql.suceso_clave.application.mapper.SucesoClaveMapper;
 import com.nicogbdev.aygp_backend_sql.suceso_clave.application.service.SucesoClaveService;
 import com.nicogbdev.aygp_backend_sql.suceso_clave.domain.entity.SucesoClave;
@@ -86,6 +86,10 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
         // Defino el ID del usuario y la fecha de creación del suceso.
         sucesoClaveDTO.setUsuarioId(usuarioSuceso.getId());
         sucesoClaveDTO.setFechaCreacion(new Date());
+
+        if (sucesoClaveDTO.getFechaSuceso() == null) {
+            sucesoClaveDTO.setFechaSuceso(new Date());
+        }
 
         // Guardo el Suceso Clave en BBDD.
         SucesoClave savedSuceso = sucesoClaveRepository.save(sucesoClaveMapper.toEntity(sucesoClaveDTO));

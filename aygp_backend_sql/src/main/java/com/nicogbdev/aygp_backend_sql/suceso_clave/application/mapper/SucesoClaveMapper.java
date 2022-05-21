@@ -1,7 +1,7 @@
 package com.nicogbdev.aygp_backend_sql.suceso_clave.application.mapper;
 
 import com.nicogbdev.aygp_backend_sql.mapper.EntityMapper;
-import com.nicogbdev.aygp_backend_sql.suceso_clave.application.dto.SucesoClaveDTO;
+import com.nicogbdev.aygp_backend_sql.suceso_clave.application.mapper.dto.SucesoClaveDTO;
 import com.nicogbdev.aygp_backend_sql.suceso_clave.domain.entity.SucesoClave;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
 import org.mapstruct.Mapper;

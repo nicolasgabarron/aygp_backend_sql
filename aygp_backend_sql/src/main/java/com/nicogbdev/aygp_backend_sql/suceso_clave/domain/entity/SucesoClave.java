@@ -95,4 +95,12 @@ public class SucesoClave {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public Date getFechaSuceso() {
+        return fechaSuceso;
+    }
+
+    public void setFechaSuceso(Date fechaSuceso) {
+        this.fechaSuceso = fechaSuceso;
+    }
 }

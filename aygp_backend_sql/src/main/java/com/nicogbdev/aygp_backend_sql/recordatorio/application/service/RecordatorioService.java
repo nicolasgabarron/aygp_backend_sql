@@ -11,7 +11,7 @@ public interface RecordatorioService {
     List<RecordatorioDTO> obtenerRecordatoriosUsuario(Long id);
     List<RecordatorioDTO> obtenerRecordatoriosUsuario(String username);
     RecordatorioDTO obtenerRecordatorio(Long idRecordatorio) throws RecordatorioNotFoundException;
-    RecordatorioDTO obtenerRecordatorio(String username, Long idRecordatorio);
+    RecordatorioDTO obtenerRecordatorio(String username, Long idRecordatorio) throws RecordatorioNotFoundException;
     RecordatorioDTO crearRecordatorio(RecordatorioDTO recordatorioDTO);
     RecordatorioDTO crearRecordatorio(String username, RecordatorioDTO recordatorioDTO) throws UsuarioNotFoundException;
     RecordatorioDTO modificarRecordatorio(Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException;

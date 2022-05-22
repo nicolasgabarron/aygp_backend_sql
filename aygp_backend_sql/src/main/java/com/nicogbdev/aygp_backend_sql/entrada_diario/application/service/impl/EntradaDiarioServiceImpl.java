@@ -5,13 +5,12 @@ import com.nicogbdev.aygp_backend_sql.entrada_diario.application.mapper.EntradaD
 import com.nicogbdev.aygp_backend_sql.entrada_diario.application.service.EntradaDiarioService;
 import com.nicogbdev.aygp_backend_sql.entrada_diario.domain.entity.EntradaDiario;
 import com.nicogbdev.aygp_backend_sql.entrada_diario.infrastructure.repository.EntradaDiarioRepository;
-import com.nicogbdev.aygp_backend_sql.exceptions.EntradaDiarioNotFound;
+import com.nicogbdev.aygp_backend_sql.exceptions.EntradaDiarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
 import com.nicogbdev.aygp_backend_sql.usuario.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -53,19 +52,19 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
     }
 
     @Override
-    public EntradaDiarioDTO obtenerEntradaDiario(Long idEntradaDiario) throws EntradaDiarioNotFound {
+    public EntradaDiarioDTO obtenerEntradaDiario(Long idEntradaDiario) throws EntradaDiarioNotFoundException {
         return entradaDiarioRepository.findById(idEntradaDiario)
                 .map(entradaDiario -> entradaDiarioMapper.toDto(entradaDiario))
-                .orElseThrow(() -> new EntradaDiarioNotFound("La entrada de diario no ha sido encontrada."));
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada de diario no ha sido encontrada."));
     }
 
     @Override
-    public EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFound{
+    public EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFoundException {
         // TODO: Posible punto problemático. No sé si obtiene correctamente la Entrada de Diario del repositorio.
         EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario);
 
         if (entradaDiario == null) {
-            throw new EntradaDiarioNotFound("La entrada del diario no ha sido encontrada.");
+            throw new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada.");
         }
 
         return entradaDiarioMapper.toDto(entradaDiario);
@@ -103,13 +102,13 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
     }
 
     @Override
-    public void eliminarEntradaDiario(String username, Long idEntradaDiario) throws UsuarioNotFoundException, EntradaDiarioNotFound, SinPermisoException {
+    public void eliminarEntradaDiario(String username, Long idEntradaDiario) throws UsuarioNotFoundException, EntradaDiarioNotFoundException, SinPermisoException {
         // Obtengo el usuario para comprobar que es de su autoría la entrada que quiere eliminar.
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsuarioNotFoundException("El usuario no ha sido encontrado."));
 
         EntradaDiario entradaDiario = entradaDiarioRepository.findById(idEntradaDiario)
-                .orElseThrow(() -> new EntradaDiarioNotFound("La entrada de diario no ha sido encontrada."));
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada de diario no ha sido encontrada."));
 
         if (usuario.getId().equals(entradaDiario.getUsuario().getId()))
             entradaDiarioRepository.deleteById(idEntradaDiario);

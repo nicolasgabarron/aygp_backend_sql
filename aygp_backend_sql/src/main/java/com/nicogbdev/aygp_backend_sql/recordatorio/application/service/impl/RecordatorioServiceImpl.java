@@ -57,8 +57,10 @@ public class RecordatorioServiceImpl implements RecordatorioService {
     }
 
     @Override
-    public RecordatorioDTO obtenerRecordatorio(String username, Long idRecordatorio) {
-        Recordatorio byIdAndUsuario_username = recordatorioRepository.findByIdAndUsuario_Username(idRecordatorio, username);
+    public RecordatorioDTO obtenerRecordatorio(String username, Long idRecordatorio) throws RecordatorioNotFoundException {
+        Recordatorio byIdAndUsuario_username = recordatorioRepository.findByIdAndUsuario_Username(idRecordatorio, username)
+                .orElseThrow(() -> new RecordatorioNotFoundException("Recordatorio no encontrado."));
+
         return recordatorioMapper.toDto(byIdAndUsuario_username);
     }
 

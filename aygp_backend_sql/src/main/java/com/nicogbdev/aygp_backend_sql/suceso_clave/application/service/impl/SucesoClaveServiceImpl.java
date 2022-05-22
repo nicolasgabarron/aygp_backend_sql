@@ -61,11 +61,8 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
 
     @Override
     public SucesoClaveDTO obtenerSucesoClave(String username, Long idSuceso) throws SucesoClaveNotFoundException {
-        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_Username(idSuceso, username);
-
-        if (byIdAndUsuario_username == null) {
-            throw new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado.");
-        }
+        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_Username(idSuceso, username)
+                .orElseThrow(() -> new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado."));
 
         return sucesoClaveMapper.toDto(byIdAndUsuario_username);
     }

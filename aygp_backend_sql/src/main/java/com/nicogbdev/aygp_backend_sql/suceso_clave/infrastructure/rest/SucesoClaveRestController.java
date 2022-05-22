@@ -44,32 +44,27 @@ public class SucesoClaveRestController {
     public ResponseEntity<SucesoClaveDTO> obtenerSucesoClavePorId(@CookieValue(value = "nicogbdev_jwt") String jwt, @PathVariable Long idSuceso){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
 
-        SucesoClaveDTO sucesoClaveDTO;
-
         try {
-            sucesoClaveDTO = sucesoClaveService.obtenerSucesoClave(nombreUsuario, idSuceso);
+            SucesoClaveDTO sucesoClaveDTO = sucesoClaveService.obtenerSucesoClave(nombreUsuario, idSuceso);
+
+            return new ResponseEntity<>(sucesoClaveDTO, HttpStatus.OK);
         } catch (SucesoClaveNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(sucesoClaveDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/sucesos", produces = "application/json", consumes = "application/json")
     public ResponseEntity<SucesoClaveDTO> crearSucesoClave(@CookieValue(value = "nicogbdev_jwt") String jwt, @RequestBody SucesoClaveDTO sucesoClaveDTO){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
 
-        SucesoClaveDTO sucesoGuardar;
         try {
-            sucesoGuardar = sucesoClaveService.crearSucesoClave(nombreUsuario, sucesoClaveDTO);
+            SucesoClaveDTO sucesoGuardar = sucesoClaveService.crearSucesoClave(nombreUsuario, sucesoClaveDTO);
+
+            return new ResponseEntity<>(sucesoGuardar, HttpStatus.CREATED);
         } catch (UsuarioNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(sucesoGuardar, HttpStatus.CREATED);
     }
-
-    // TODO: Implementar endpoint para modificar un Suceso Clave.
 
     @DeleteMapping(value = "/sucesos/{idSuceso}")
     public ResponseEntity<Void> eliminarSucesoClave(@CookieValue(value = "nicogbdev_jwt") String jwt, Long idSuceso){

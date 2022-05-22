@@ -60,12 +60,8 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
 
     @Override
     public EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFoundException {
-        // TODO: Posible punto problemático. No sé si obtiene correctamente la Entrada de Diario del repositorio.
-        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario);
-
-        if (entradaDiario == null) {
-            throw new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada.");
-        }
+        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario)
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada."));
 
         return entradaDiarioMapper.toDto(entradaDiario);
     }

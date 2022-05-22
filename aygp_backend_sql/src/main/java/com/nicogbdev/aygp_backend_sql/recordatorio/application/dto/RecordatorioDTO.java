@@ -1,5 +1,7 @@
 package com.nicogbdev.aygp_backend_sql.recordatorio.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -10,6 +12,7 @@ public class RecordatorioDTO {
     private String titulo;
     private String detalle;
     private Date fechaCreacion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy@HH:mm:ss", timezone = "GMT+2")
     private Date fechaRecordatorio;
     private Boolean realizado;
 

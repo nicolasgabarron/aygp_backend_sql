@@ -1,6 +1,7 @@
 package com.nicogbdev.aygp_backend_sql.recordatorio.application.service;
 
 import com.nicogbdev.aygp_backend_sql.exceptions.RecordatorioNotFoundException;
+import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.recordatorio.application.dto.RecordatorioDTO;
 
@@ -15,9 +16,9 @@ public interface RecordatorioService {
     RecordatorioDTO crearRecordatorio(RecordatorioDTO recordatorioDTO);
     RecordatorioDTO crearRecordatorio(String username, RecordatorioDTO recordatorioDTO) throws UsuarioNotFoundException;
     RecordatorioDTO modificarRecordatorio(Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException;
-    RecordatorioDTO modificarRecordatorio(String username, Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException, UsuarioNotFoundException;
+    RecordatorioDTO modificarRecordatorio(String username, Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException, UsuarioNotFoundException, SinPermisoException;
     RecordatorioDTO cambiarRealizado(Long id) throws RecordatorioNotFoundException;
-    RecordatorioDTO cambiarRealizado(String username, Long id) throws RecordatorioNotFoundException, UsuarioNotFoundException;
+    RecordatorioDTO cambiarRealizado(String username, Long id) throws RecordatorioNotFoundException, UsuarioNotFoundException, SinPermisoException;
     void eliminarRecordatorio(Long idRecordatorio);
-    void eliminarRecordatorio(String username, Long idRecordatorio) throws UsuarioNotFoundException, RecordatorioNotFoundException;
+    void eliminarRecordatorio(String username, Long idRecordatorio) throws UsuarioNotFoundException, RecordatorioNotFoundException, SinPermisoException;
 }

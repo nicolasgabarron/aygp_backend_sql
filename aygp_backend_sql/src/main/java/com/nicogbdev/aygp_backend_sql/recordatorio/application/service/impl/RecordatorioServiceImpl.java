@@ -1,6 +1,7 @@
 package com.nicogbdev.aygp_backend_sql.recordatorio.application.service.impl;
 
 import com.nicogbdev.aygp_backend_sql.exceptions.RecordatorioNotFoundException;
+import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.recordatorio.application.dto.RecordatorioDTO;
 import com.nicogbdev.aygp_backend_sql.recordatorio.application.mapper.RecordatorioMapper;
@@ -80,6 +81,9 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         // Defino el ID del usuario y la fecha de creación del recordatorio.
         recordatorioDTO.setUsuarioId(usuario.getId());
         recordatorioDTO.setFechaCreacion(new Date());
+        // Si no se especifica el campo realizado, lo establezco por defecto a false.
+        if (recordatorioDTO.getRealizado() == null)
+            recordatorioDTO.setRealizado(false);
 
         // Guardo el suceso en BBDD.
         Recordatorio savedRecordatorio = recordatorioRepository.save(recordatorioMapper.toEntity(recordatorioDTO));
@@ -96,7 +100,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         recordatorioModificar.setTitulo(recordatorioDTO.getTitulo());
         recordatorioModificar.setDetalle(recordatorioDTO.getDetalle());
         recordatorioModificar.setFechaRecordatorio(recordatorioDTO.getFechaRecordatorio());
-        recordatorioModificar.setRealizado(recordatorioDTO.getRealizado());
+        recordatorioModificar.setRealizado(recordatorioDTO.getRealizado()== null ? false : recordatorioDTO.getRealizado());
 
         // Guardo cambios en BBDD.
         recordatorioModificar = recordatorioRepository.save(recordatorioModificar);
@@ -105,7 +109,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
     }
 
     @Override
-    public RecordatorioDTO modificarRecordatorio(String username, Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException, UsuarioNotFoundException {
+    public RecordatorioDTO modificarRecordatorio(String username, Long id, RecordatorioDTO recordatorioDTO) throws RecordatorioNotFoundException, UsuarioNotFoundException, SinPermisoException {
 
         // Obtengo el usuario.
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -116,8 +120,10 @@ public class RecordatorioServiceImpl implements RecordatorioService {
                 .orElseThrow(() -> new RecordatorioNotFoundException("Recordatorio no encontrado."));
 
         // Compruebo si pertenece el recordatorio al usuario.
-        if (recordatorio.getUsuario().getId().equals(usuario.getId())){
+        if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             recordatorioDTO = modificarRecordatorio(id, recordatorioDTO);
+        }else {
+            throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
         }
 
         return recordatorioDTO;
@@ -131,11 +137,14 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         // Cambio a su opuesto el campo Realizado.
         recordatorio.setRealizado(!recordatorio.getRealizado());
 
-        return recordatorioMapper.toDto(recordatorio);
+        // Guardo el estado.
+        Recordatorio updatedRecordatorio = recordatorioRepository.save(recordatorio);
+
+        return recordatorioMapper.toDto(updatedRecordatorio);
     }
 
     @Override
-    public RecordatorioDTO cambiarRealizado(String username, Long id) throws RecordatorioNotFoundException, UsuarioNotFoundException {
+    public RecordatorioDTO cambiarRealizado(String username, Long id) throws RecordatorioNotFoundException, UsuarioNotFoundException, SinPermisoException {
 
         // Obtengo el usuario.
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -144,12 +153,18 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         Recordatorio recordatorio = recordatorioRepository.findById(id)
                 .orElseThrow(() -> new RecordatorioNotFoundException("Recordatorio no encontrado."));
 
-        if (recordatorio.getUsuario().getId().equals(usuario.getId())){
+        if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             // Cambio a su opuesto el campo Realizado.
             recordatorio.setRealizado(!recordatorio.getRealizado());
         }
+        else {
+            throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
+        }
 
-        return recordatorioMapper.toDto(recordatorio);
+        // Guardo el estado.
+        Recordatorio updatedRecordatorio = recordatorioRepository.save(recordatorio);
+
+        return recordatorioMapper.toDto(updatedRecordatorio);
     }
 
     @Override
@@ -158,7 +173,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
     }
 
     @Override
-    public void eliminarRecordatorio(String username, Long idRecordatorio) throws UsuarioNotFoundException, RecordatorioNotFoundException {
+    public void eliminarRecordatorio(String username, Long idRecordatorio) throws UsuarioNotFoundException, RecordatorioNotFoundException, SinPermisoException {
 
         // Obtengo el usuario.
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -169,8 +184,10 @@ public class RecordatorioServiceImpl implements RecordatorioService {
                 .orElseThrow(() -> new RecordatorioNotFoundException("Recordatorio no encontrado."));
 
         // Compruebo si pertenece el recordatorio al usuario.
-        if (recordatorio.getUsuario().getId().equals(usuario.getId())){
+        if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             recordatorioRepository.deleteById(idRecordatorio);
+        }else {
+            throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
         }
     }
 }

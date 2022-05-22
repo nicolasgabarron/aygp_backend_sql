@@ -2,6 +2,7 @@ package com.nicogbdev.aygp_backend_sql.entrada_diario.infrastructure.rest;
 
 import com.nicogbdev.aygp_backend_sql.entrada_diario.application.dto.EntradaDiarioDTO;
 import com.nicogbdev.aygp_backend_sql.entrada_diario.application.service.EntradaDiarioService;
+import com.nicogbdev.aygp_backend_sql.entrada_diario.domain.entity.EntradaDiario;
 import com.nicogbdev.aygp_backend_sql.exceptions.EntradaDiarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
@@ -41,31 +42,49 @@ public class EntradaDiarioRestController {
     }
 
     @GetMapping(value = "/entradas/{idEntrada}", produces = "application/json")
-    public ResponseEntity<EntradaDiarioDTO> obtenerEntradaPorId(@CookieValue(value = "nicogbdev_jwt") String jwt, @PathVariable Long idEntrada){
+    public ResponseEntity<EntradaDiarioDTO> obtenerEntradaPorId(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                                @PathVariable Long idEntrada){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
-        EntradaDiarioDTO entradaDiarioDTO;
         try {
-            entradaDiarioDTO = entradaDiarioService.obtenerEntradaDiario(nombreUsuario, idEntrada);
+            EntradaDiarioDTO entradaDiarioDTO = entradaDiarioService.obtenerEntradaDiario(nombreUsuario, idEntrada);
+
+            return new ResponseEntity<>(entradaDiarioDTO, HttpStatus.OK);
         } catch (EntradaDiarioNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(entradaDiarioDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/entradas/nueva", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<EntradaDiarioDTO> crearEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt, @RequestBody EntradaDiarioDTO entradaDiarioDTO) {
+    public ResponseEntity<EntradaDiarioDTO> crearEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                         @RequestBody EntradaDiarioDTO entradaDiarioDTO) {
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
 
-        EntradaDiarioDTO entradaDiario;
-
         try {
-            entradaDiario = entradaDiarioService.crearEntradaDiario(nombreUsuario, entradaDiarioDTO);
+            EntradaDiarioDTO entradaDiario = entradaDiarioService.crearEntradaDiario(nombreUsuario, entradaDiarioDTO);
+
+            return new ResponseEntity<>(entradaDiario, HttpStatus.OK);
         } catch (UsuarioNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
 
-        return new ResponseEntity<>(entradaDiario, HttpStatus.OK);
+    @PatchMapping(value = "/entradas/modificar/{idEntrada}", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<EntradaDiarioDTO> modificarEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                             @PathVariable Long idEntrada,
+                                                             @RequestBody EntradaDiarioDTO entradaDiarioDTO){
+        String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
+
+        try {
+            EntradaDiarioDTO entradaModificada = entradaDiarioService.modificarEntradaDiario(nombreUsuario, idEntrada, entradaDiarioDTO);
+
+            return new ResponseEntity<>(entradaModificada, HttpStatus.OK);
+        } catch (SinPermisoException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (EntradaDiarioNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (UsuarioNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping(value = "/entradas/eliminar/{idEntrada}")

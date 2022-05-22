@@ -41,8 +41,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             logger.error("No se ha podido establecer la autenticación: {}", e);
         }
 
-
-        // TODO: SALTA EXCEPCIÓN USER IS DISABLED. https://stackoverflow.com/questions/39139352/spring-security-userdetails-org-springframework-security-authentication-disable
         filterChain.doFilter(request, response);
     }
 

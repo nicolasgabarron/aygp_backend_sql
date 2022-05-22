@@ -15,6 +15,8 @@ public interface SucesoClaveService {
     SucesoClaveDTO obtenerSucesoClave(String username, Long idSuceso) throws SucesoClaveNotFoundException; // Usuario, especialista
     SucesoClaveDTO crearSucesoClave(SucesoClaveDTO sucesoClaveDTO); // Administrador
     SucesoClaveDTO crearSucesoClave(String username, SucesoClaveDTO sucesoClaveDTO) throws UsuarioNotFoundException; // Usuario, especialista
+    SucesoClaveDTO modificarSucesoClave(Long id, SucesoClaveDTO sucesoClaveDTO) throws SucesoClaveNotFoundException;
+    SucesoClaveDTO modificarSucesoClave(String username, Long id, SucesoClaveDTO sucesoClaveDTO) throws UsuarioNotFoundException, SucesoClaveNotFoundException, SinPermisoException;
     void eliminarSucesoClave(Long idSuceso); //
     void eliminarSucesoClave(String username, Long idSuceso) throws UsuarioNotFoundException, SucesoClaveNotFoundException, SinPermisoException;
 }

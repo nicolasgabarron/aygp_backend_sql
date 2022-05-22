@@ -61,11 +61,8 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
 
     @Override
     public SucesoClaveDTO obtenerSucesoClave(String username, Long idSuceso) throws SucesoClaveNotFoundException {
-        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_Username(idSuceso, username);
-
-        if (byIdAndUsuario_username == null) {
-            throw new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado.");
-        }
+        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_Username(idSuceso, username)
+                .orElseThrow(() -> new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado."));
 
         return sucesoClaveMapper.toDto(byIdAndUsuario_username);
     }
@@ -98,6 +95,54 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
     }
 
     @Override
+    public SucesoClaveDTO modificarSucesoClave(Long id, SucesoClaveDTO sucesoClaveDTO) throws SucesoClaveNotFoundException {
+        SucesoClave sucesoClave = sucesoClaveRepository.findById(id)
+                .orElseThrow(() -> new SucesoClaveNotFoundException("Suceso clave no encontrado."));
+
+        // Fecha suceso.
+        sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+        // Titulo
+        sucesoClave.setTitulo(sucesoClaveDTO.getTitulo() == null ? sucesoClave.getTitulo() : sucesoClaveDTO.getTitulo());
+        // Contenido
+        sucesoClave.setContenido(sucesoClaveDTO.getContenido() == null ? sucesoClave.getContenido() : sucesoClaveDTO.getContenido());
+        // Valoración
+        sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+
+        // Guardo el suceso.
+        sucesoClave = sucesoClaveRepository.save(sucesoClave);
+
+        return sucesoClaveMapper.toDto(sucesoClave);
+    }
+
+    @Override
+    public SucesoClaveDTO modificarSucesoClave(String username, Long id, SucesoClaveDTO sucesoClaveDTO) throws UsuarioNotFoundException, SucesoClaveNotFoundException, SinPermisoException {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado."));
+
+        SucesoClave sucesoClave = sucesoClaveRepository.findById(id)
+                .orElseThrow(() -> new SucesoClaveNotFoundException("Suceso clave no encontrado."));
+
+        if (usuario.getId().equals(sucesoClave.getUsuario().getId())) {
+            // Fecha suceso.
+            sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+            // Titulo
+            sucesoClave.setTitulo(sucesoClaveDTO.getTitulo() == null ? sucesoClave.getTitulo() : sucesoClaveDTO.getTitulo());
+            // Contenido
+            sucesoClave.setContenido(sucesoClaveDTO.getContenido() == null ? sucesoClave.getContenido() : sucesoClaveDTO.getContenido());
+            // Valoración
+            sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+
+            // Guardo el suceso.
+            sucesoClave = sucesoClaveRepository.save(sucesoClave);
+
+            return sucesoClaveMapper.toDto(sucesoClave);
+
+        }else {
+            throw new SinPermisoException("No tienes permiso para modificar ese suceso clave.");
+        }
+    }
+
+    @Override
     public void eliminarSucesoClave(Long idSuceso) {
         sucesoClaveRepository.deleteById(idSuceso);
     }
@@ -113,7 +158,7 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
                 .orElseThrow(() -> new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado."));
 
         // Compruebo si el Suceso Clave pertenece al usuario que solicita la eliminación.
-        if(usuarioSuceso.getId().equals(sucesoClave.getUsuario().getId()))
+        if (usuarioSuceso.getId().equals(sucesoClave.getUsuario().getId()))
             sucesoClaveRepository.deleteById(idSuceso);
         else throw new SinPermisoException("No tienes permiso para eliminar ese Suceso Clave.");
     }

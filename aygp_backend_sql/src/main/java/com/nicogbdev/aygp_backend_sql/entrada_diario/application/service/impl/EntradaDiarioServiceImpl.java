@@ -33,8 +33,6 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
     }
 
 
-
-
     // Métodos.
 
     @Override
@@ -60,12 +58,8 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
 
     @Override
     public EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFoundException {
-        // TODO: Posible punto problemático. No sé si obtiene correctamente la Entrada de Diario del repositorio.
-        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario);
-
-        if (entradaDiario == null) {
-            throw new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada.");
-        }
+        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario)
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada."));
 
         return entradaDiarioMapper.toDto(entradaDiario);
     }
@@ -94,6 +88,46 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
 
         // Devuelvo la entrada convertida a DTO.
         return entradaDiarioMapper.toDto(entradaGuardada);
+    }
+
+    @Override
+    public EntradaDiarioDTO modificarEntradaDiario(Long idEntrada, EntradaDiarioDTO entradaDiarioDTO) throws EntradaDiarioNotFoundException {
+        EntradaDiario entradaModificar = entradaDiarioRepository.findById(idEntrada)
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada de diario no ha sido encontrada."));
+
+        // Titulo
+        entradaModificar.setTitulo(entradaDiarioDTO.getTitulo() == null ? entradaModificar.getTitulo() : entradaDiarioDTO.getTitulo());
+        // Contenido
+        entradaModificar.setContenido(entradaDiarioDTO.getContenido() == null ? entradaModificar.getContenido() : entradaDiarioDTO.getContenido());
+
+        // Guardo la modificación.
+        entradaModificar = entradaDiarioRepository.save(entradaModificar);
+
+        return entradaDiarioMapper.toDto(entradaModificar);
+    }
+
+    @Override
+    public EntradaDiarioDTO modificarEntradaDiario(String username, Long idEntrada, EntradaDiarioDTO entradaDiarioDTO) throws EntradaDiarioNotFoundException, UsuarioNotFoundException, SinPermisoException {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsuarioNotFoundException("El usuario no ha sido encontrado."));
+
+        EntradaDiario entradaModificar = entradaDiarioRepository.findById(idEntrada)
+                .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada de diario no ha sido encontrada."));
+
+        // Comprobación de si pertenece la entrada a modificar al usuario que ha lanzado la petición.
+        if(entradaModificar.getUsuario().getId().equals(usuario.getId())){
+            // Titulo
+            entradaModificar.setTitulo(entradaDiarioDTO.getTitulo() == null ? entradaModificar.getTitulo() : entradaDiarioDTO.getTitulo());
+            // Contenido
+            entradaModificar.setContenido(entradaDiarioDTO.getContenido() == null ? entradaModificar.getContenido() : entradaDiarioDTO.getContenido());
+
+            // Guardo la modificación.
+            entradaModificar = entradaDiarioRepository.save(entradaModificar);
+
+            return entradaDiarioMapper.toDto(entradaModificar);
+        }else {
+            throw new SinPermisoException("No tienes permiso para modificar esa entrada de diario.");
+        }
     }
 
     @Override

@@ -14,6 +14,8 @@ public interface EntradaDiarioService {
     EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFoundException;
     EntradaDiarioDTO crearEntradaDiario(EntradaDiarioDTO entradaDiarioDTO);
     EntradaDiarioDTO crearEntradaDiario(String username, EntradaDiarioDTO entradaDiarioDTO) throws UsuarioNotFoundException;
+    EntradaDiarioDTO modificarEntradaDiario(Long idEntrada, EntradaDiarioDTO entradaDiarioDTO) throws EntradaDiarioNotFoundException;
+    EntradaDiarioDTO modificarEntradaDiario(String username, Long idEntrada, EntradaDiarioDTO entradaDiarioDTO) throws EntradaDiarioNotFoundException, UsuarioNotFoundException, SinPermisoException;
     void eliminarEntradaDiario(Long idEntradaDiario);
     void eliminarEntradaDiario(String username, Long idEntradaDiario) throws UsuarioNotFoundException, EntradaDiarioNotFoundException, SinPermisoException;
 

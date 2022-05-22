@@ -42,7 +42,8 @@ public class EntradaDiarioRestController {
     }
 
     @GetMapping(value = "/entradas/{idEntrada}", produces = "application/json")
-    public ResponseEntity<EntradaDiarioDTO> obtenerEntradaPorId(@CookieValue(value = "nicogbdev_jwt") String jwt, @PathVariable Long idEntrada){
+    public ResponseEntity<EntradaDiarioDTO> obtenerEntradaPorId(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                                @PathVariable Long idEntrada){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
         try {
             EntradaDiarioDTO entradaDiarioDTO = entradaDiarioService.obtenerEntradaDiario(nombreUsuario, idEntrada);
@@ -54,13 +55,33 @@ public class EntradaDiarioRestController {
     }
 
     @PostMapping(value = "/entradas/nueva", produces = "application/json", consumes = "application/json")
-    public ResponseEntity<EntradaDiarioDTO> crearEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt, @RequestBody EntradaDiarioDTO entradaDiarioDTO) {
+    public ResponseEntity<EntradaDiarioDTO> crearEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                         @RequestBody EntradaDiarioDTO entradaDiarioDTO) {
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
 
         try {
             EntradaDiarioDTO entradaDiario = entradaDiarioService.crearEntradaDiario(nombreUsuario, entradaDiarioDTO);
 
             return new ResponseEntity<>(entradaDiario, HttpStatus.OK);
+        } catch (UsuarioNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping(value = "/entradas/modificar/{idEntrada}", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<EntradaDiarioDTO> modificarEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt,
+                                                             @PathVariable Long idEntrada,
+                                                             @RequestBody EntradaDiarioDTO entradaDiarioDTO){
+        String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
+
+        try {
+            EntradaDiarioDTO entradaModificada = entradaDiarioService.modificarEntradaDiario(nombreUsuario, idEntrada, entradaDiarioDTO);
+
+            return new ResponseEntity<>(entradaModificada, HttpStatus.OK);
+        } catch (SinPermisoException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (EntradaDiarioNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (UsuarioNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

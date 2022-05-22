@@ -2,11 +2,10 @@ package com.nicogbdev.aygp_backend_sql.entrada_diario.infrastructure.rest;
 
 import com.nicogbdev.aygp_backend_sql.entrada_diario.application.dto.EntradaDiarioDTO;
 import com.nicogbdev.aygp_backend_sql.entrada_diario.application.service.EntradaDiarioService;
-import com.nicogbdev.aygp_backend_sql.exceptions.EntradaDiarioNotFound;
+import com.nicogbdev.aygp_backend_sql.exceptions.EntradaDiarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.exceptions.SinPermisoException;
 import com.nicogbdev.aygp_backend_sql.exceptions.UsuarioNotFoundException;
 import com.nicogbdev.aygp_backend_sql.security.jwt.JwtUtils;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +46,7 @@ public class EntradaDiarioRestController {
         EntradaDiarioDTO entradaDiarioDTO;
         try {
             entradaDiarioDTO = entradaDiarioService.obtenerEntradaDiario(nombreUsuario, idEntrada);
-        } catch (EntradaDiarioNotFound e) {
+        } catch (EntradaDiarioNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -69,8 +68,6 @@ public class EntradaDiarioRestController {
         return new ResponseEntity<>(entradaDiario, HttpStatus.OK);
     }
 
-    // TODO: Implementar endpoint para modificar una Entrada de Diario.
-
     @DeleteMapping(value = "/entradas/eliminar/{idEntrada}")
     public ResponseEntity<Void> eliminarEntrada(@CookieValue(value = "nicogbdev_jwt") String jwt, @PathVariable Long idEntrada){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -82,7 +79,7 @@ public class EntradaDiarioRestController {
         } catch (UsuarioNotFoundException e) {
             // En caso de no conseguir recuperar el usuario...
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (EntradaDiarioNotFound e) {
+        } catch (EntradaDiarioNotFoundException e) {
             // En caso de no conseguir recuperar la entrada de diario...
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (SinPermisoException e) {

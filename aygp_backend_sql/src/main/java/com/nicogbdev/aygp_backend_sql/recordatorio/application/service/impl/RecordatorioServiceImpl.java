@@ -97,10 +97,10 @@ public class RecordatorioServiceImpl implements RecordatorioService {
                 .orElseThrow(() -> new RecordatorioNotFoundException("El recordatorio no ha sido encontrado."));
 
         // Modificación.
-        recordatorioModificar.setTitulo(recordatorioDTO.getTitulo());
-        recordatorioModificar.setDetalle(recordatorioDTO.getDetalle());
-        recordatorioModificar.setFechaRecordatorio(recordatorioDTO.getFechaRecordatorio());
-        recordatorioModificar.setRealizado(recordatorioDTO.getRealizado()== null ? false : recordatorioDTO.getRealizado());
+        recordatorioModificar.setTitulo(recordatorioDTO.getTitulo() == null ? recordatorioModificar.getTitulo() : recordatorioDTO.getTitulo());
+        recordatorioModificar.setDetalle(recordatorioDTO.getDetalle() == null ? recordatorioModificar.getDetalle() : recordatorioDTO.getDetalle());
+        recordatorioModificar.setFechaRecordatorio(recordatorioDTO.getFechaRecordatorio() == null ? recordatorioModificar.getFechaCreacion() : recordatorioDTO.getFechaRecordatorio());
+        recordatorioModificar.setRealizado(recordatorioDTO.getRealizado() == null ? false : recordatorioDTO.getRealizado());
 
         // Guardo cambios en BBDD.
         recordatorioModificar = recordatorioRepository.save(recordatorioModificar);
@@ -122,7 +122,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         // Compruebo si pertenece el recordatorio al usuario.
         if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             recordatorioDTO = modificarRecordatorio(id, recordatorioDTO);
-        }else {
+        } else {
             throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
         }
 
@@ -156,8 +156,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             // Cambio a su opuesto el campo Realizado.
             recordatorio.setRealizado(!recordatorio.getRealizado());
-        }
-        else {
+        } else {
             throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
         }
 
@@ -186,7 +185,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
         // Compruebo si pertenece el recordatorio al usuario.
         if (recordatorio.getUsuario().getId().equals(usuario.getId())) {
             recordatorioRepository.deleteById(idRecordatorio);
-        }else {
+        } else {
             throw new SinPermisoException("No tienes permiso para ejecutar esa petición.");
         }
     }

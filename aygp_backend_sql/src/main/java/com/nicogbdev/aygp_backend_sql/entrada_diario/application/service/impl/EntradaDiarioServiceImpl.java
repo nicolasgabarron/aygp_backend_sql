@@ -115,7 +115,7 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
                 .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada de diario no ha sido encontrada."));
 
         // Comprobación de si pertenece la entrada a modificar al usuario que ha lanzado la petición.
-        if(entradaModificar.getUsuario().getId().equals(usuario.getId())){
+        if (entradaModificar.getUsuario().getId().equals(usuario.getId())) {
             // Titulo
             entradaModificar.setTitulo(entradaDiarioDTO.getTitulo() == null ? entradaModificar.getTitulo() : entradaDiarioDTO.getTitulo());
             // Contenido
@@ -125,7 +125,7 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
             entradaModificar = entradaDiarioRepository.save(entradaModificar);
 
             return entradaDiarioMapper.toDto(entradaModificar);
-        }else {
+        } else {
             throw new SinPermisoException("No tienes permiso para modificar esa entrada de diario.");
         }
     }

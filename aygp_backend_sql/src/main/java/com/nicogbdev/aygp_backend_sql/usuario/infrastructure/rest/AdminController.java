@@ -2,8 +2,6 @@ package com.nicogbdev.aygp_backend_sql.usuario.infrastructure.rest;
 
 import com.nicogbdev.aygp_backend_sql.usuario.application.dto.UsuarioDTO;
 import com.nicogbdev.aygp_backend_sql.usuario.application.service.AdminService;
-import com.nicogbdev.aygp_backend_sql.usuario.application.service.UsuarioService;
-import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/admin")

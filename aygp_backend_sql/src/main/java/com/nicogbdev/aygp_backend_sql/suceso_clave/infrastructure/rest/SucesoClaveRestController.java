@@ -89,7 +89,7 @@ public class SucesoClaveRestController {
 
     @DeleteMapping(value = "/sucesos/{idSuceso}")
     public ResponseEntity<Void> eliminarSucesoClave(@CookieValue(value = "nicogbdev_jwt") String jwt,
-                                                    Long idSuceso){
+                                                    @PathVariable Long idSuceso){
         String nombreUsuario = jwtUtils.getUserNameFromJwtToken(jwt);
 
         try {

@@ -40,14 +40,14 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
 
     @Override
     public List<SucesoClaveDTO> obtenerSucesosClaveUsuario(Long id) {
-        List<SucesoClave> allByUsuario_id = sucesoClaveRepository.findAllByUsuario_Id(id);
+        List<SucesoClave> allByUsuario_id = sucesoClaveRepository.findAllByUsuario_IdOrderByFechaCreacionDesc(id);
 
         return sucesoClaveMapper.toDto(allByUsuario_id);
     }
 
     @Override
     public List<SucesoClaveDTO> obtenerSucesosClaveUsuario(String username) {
-        List<SucesoClave> allByUsuario_username = sucesoClaveRepository.findAllByUsuario_Username(username);
+        List<SucesoClave> allByUsuario_username = sucesoClaveRepository.findAllByUsuario_UsernameOrderByFechaCreacionDesc(username);
 
         return sucesoClaveMapper.toDto(allByUsuario_username);
     }
@@ -61,7 +61,7 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
 
     @Override
     public SucesoClaveDTO obtenerSucesoClave(String username, Long idSuceso) throws SucesoClaveNotFoundException {
-        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_Username(idSuceso, username)
+        SucesoClave byIdAndUsuario_username = sucesoClaveRepository.findByIdAndUsuario_UsernameOrderByFechaCreacionDesc(idSuceso, username)
                 .orElseThrow(() -> new SucesoClaveNotFoundException("El suceso clave no ha sido encontrado."));
 
         return sucesoClaveMapper.toDto(byIdAndUsuario_username);
@@ -106,8 +106,10 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
         // Contenido
         sucesoClave.setContenido(sucesoClaveDTO.getContenido() == null ? sucesoClave.getContenido() : sucesoClaveDTO.getContenido());
         // Valoración
-        sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+        sucesoClave.setValoracion(sucesoClaveDTO.getValoracion() == null ? sucesoClave.getValoracion() : sucesoClaveDTO.getValoracion());
 
+
+        System.out.println(sucesoClaveMapper.toDto(sucesoClave));
         // Guardo el suceso.
         sucesoClave = sucesoClaveRepository.save(sucesoClave);
 
@@ -130,7 +132,7 @@ public class SucesoClaveServiceImpl implements SucesoClaveService {
             // Contenido
             sucesoClave.setContenido(sucesoClaveDTO.getContenido() == null ? sucesoClave.getContenido() : sucesoClaveDTO.getContenido());
             // Valoración
-            sucesoClave.setFechaSuceso(sucesoClaveDTO.getFechaSuceso() == null ? sucesoClave.getFechaSuceso() : sucesoClaveDTO.getFechaSuceso());
+            sucesoClave.setValoracion(sucesoClaveDTO.getValoracion() == null ? sucesoClave.getValoracion() : sucesoClaveDTO.getValoracion());
 
             // Guardo el suceso.
             sucesoClave = sucesoClaveRepository.save(sucesoClave);

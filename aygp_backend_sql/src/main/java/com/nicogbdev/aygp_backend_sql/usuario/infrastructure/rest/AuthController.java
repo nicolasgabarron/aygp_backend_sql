@@ -79,7 +79,7 @@ public class AuthController {
         respuesta.setFechaNacimiento(usuario.getFechaNacimiento());
         respuesta.setCiudadNacimiento(usuario.getCiudadNacimiento());
         respuesta.setRoles(rolesUsuario);
-
+        // TODO: 30/5/22 Incluir el JWT en la respuesta 
 
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())

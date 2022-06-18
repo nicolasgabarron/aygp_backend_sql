@@ -9,13 +9,11 @@ public class SucesoClaveDTO {
     // Propiedades.
     private Long id;
     private Long usuarioId;
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaCreacion;
-    @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss")
     private Date fechaSuceso;
     private String titulo;
     private String contenido;
-    private Integer valoracion;
+    private Double valoracion;
 
     // Constructor por defecto.
     public SucesoClaveDTO() {
@@ -63,11 +61,11 @@ public class SucesoClaveDTO {
         this.contenido = contenido;
     }
 
-    public Integer getValoracion() {
+    public Double getValoracion() {
         return valoracion;
     }
 
-    public void setValoracion(Integer valoracion) {
+    public void setValoracion(Double valoracion) {
         this.valoracion = valoracion;
     }
 

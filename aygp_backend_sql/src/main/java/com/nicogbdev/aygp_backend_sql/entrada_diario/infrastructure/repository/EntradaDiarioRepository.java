@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntradaDiarioRepository extends JpaRepository<EntradaDiario, Long> {
-    List<EntradaDiario> findAllByUsuario_Id(Long id);
-    List<EntradaDiario> findAllByUsuario_Username(String username);
-    Optional<EntradaDiario> findByIdAndUsuario_Username(Long id, String username);
+    List<EntradaDiario> findAllByUsuario_IdOrderByFechaCreacionDesc(Long id);
+    List<EntradaDiario> findAllByUsuario_UsernameOrderByFechaCreacionDesc(String username);
+    Optional<EntradaDiario> findByIdAndUsuario_UsernameOrderByFechaCreacionDesc(Long id, String username);
 }

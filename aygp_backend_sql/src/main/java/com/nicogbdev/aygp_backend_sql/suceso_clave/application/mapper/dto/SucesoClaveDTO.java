@@ -9,9 +9,7 @@ public class SucesoClaveDTO {
     // Propiedades.
     private Long id;
     private Long usuarioId;
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaCreacion;
-    @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss")
     private Date fechaSuceso;
     private String titulo;
     private String contenido;

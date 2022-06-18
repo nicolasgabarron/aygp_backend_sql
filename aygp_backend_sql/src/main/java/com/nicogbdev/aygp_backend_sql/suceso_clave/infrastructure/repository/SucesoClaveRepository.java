@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SucesoClaveRepository extends JpaRepository<SucesoClave, Long> {
-    List<SucesoClave> findAllByUsuario_Id(Long id);
-    List<SucesoClave> findAllByUsuario_Username(String username);
-    Optional<SucesoClave> findByIdAndUsuario_Username(Long id, String username);
+    List<SucesoClave> findAllByUsuario_IdOrderByFechaCreacionDesc(Long id);
+    List<SucesoClave> findAllByUsuario_UsernameOrderByFechaCreacionDesc(String username);
+    Optional<SucesoClave> findByIdAndUsuario_UsernameOrderByFechaCreacionDesc(Long id, String username);
 }

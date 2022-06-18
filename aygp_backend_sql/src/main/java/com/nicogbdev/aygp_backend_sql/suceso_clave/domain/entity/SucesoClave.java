@@ -2,10 +2,8 @@ package com.nicogbdev.aygp_backend_sql.suceso_clave.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nicogbdev.aygp_backend_sql.usuario.domain.entity.Usuario;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -40,9 +38,7 @@ public class SucesoClave {
     private String contenido;
 
     @Column(name = "valoracion", nullable = false)
-    @Min(value = 0)
-    @Max(value = 10)
-    private Integer valoracion;
+    private @Min(value = 0) @Max(value = 10) Double valoracion;
 
 
     // Getters y setters.
@@ -80,11 +76,11 @@ public class SucesoClave {
         this.contenido = contenido;
     }
 
-    public Integer getValoracion() {
+    public Double getValoracion() {
         return valoracion;
     }
 
-    public void setValoracion(Integer valoracion) {
+    public void setValoracion(Double valoracion) {
         this.valoracion = valoracion;
     }
 

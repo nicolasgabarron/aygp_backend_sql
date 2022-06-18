@@ -37,14 +37,14 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
 
     @Override
     public List<EntradaDiarioDTO> obtenerEntradasDiarioUsuario(Long id) {
-        List<EntradaDiario> entradasDiario = entradaDiarioRepository.findAllByUsuario_Id(id);
+        List<EntradaDiario> entradasDiario = entradaDiarioRepository.findAllByUsuario_IdOrderByFechaCreacionDesc(id);
 
         return entradaDiarioMapper.toDto(entradasDiario);
     }
 
     @Override
     public List<EntradaDiarioDTO> obtenerEntradasDiarioUsuario(String nombreUsuario) {
-        List<EntradaDiario> entradasDiario = entradaDiarioRepository.findAllByUsuario_Username(nombreUsuario);
+        List<EntradaDiario> entradasDiario = entradaDiarioRepository.findAllByUsuario_UsernameOrderByFechaCreacionDesc(nombreUsuario);
 
         return entradaDiarioMapper.toDto(entradasDiario);
     }
@@ -58,7 +58,7 @@ public class EntradaDiarioServiceImpl implements EntradaDiarioService {
 
     @Override
     public EntradaDiarioDTO obtenerEntradaDiario(String nombreUsuario, Long idEntradaDiario) throws EntradaDiarioNotFoundException {
-        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_Username(idEntradaDiario, nombreUsuario)
+        EntradaDiario entradaDiario = entradaDiarioRepository.findByIdAndUsuario_UsernameOrderByFechaCreacionDesc(idEntradaDiario, nombreUsuario)
                 .orElseThrow(() -> new EntradaDiarioNotFoundException("La entrada del diario no ha sido encontrada."));
 
         return entradaDiarioMapper.toDto(entradaDiario);

@@ -12,7 +12,7 @@ public class RecordatorioDTO {
     private String titulo;
     private String detalle;
     private Date fechaCreacion;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy@HH:mm:ss", timezone = "GMT+2")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "GMT+2")
     private Date fechaRecordatorio;
     private Boolean realizado;
 

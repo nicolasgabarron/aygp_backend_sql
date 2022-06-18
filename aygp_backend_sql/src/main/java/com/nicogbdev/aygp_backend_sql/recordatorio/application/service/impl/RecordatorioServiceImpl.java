@@ -39,13 +39,13 @@ public class RecordatorioServiceImpl implements RecordatorioService {
 
     @Override
     public List<RecordatorioDTO> obtenerRecordatoriosUsuario(Long id) {
-        List<Recordatorio> allByUsuario_id = recordatorioRepository.findAllByUsuario_Id(id);
+        List<Recordatorio> allByUsuario_id = recordatorioRepository.findAllByUsuario_IdOrderByFechaCreacionDesc(id);
         return recordatorioMapper.toDto(allByUsuario_id);
     }
 
     @Override
     public List<RecordatorioDTO> obtenerRecordatoriosUsuario(String username) {
-        List<Recordatorio> allByUsuario_username = recordatorioRepository.findAllByUsuario_Username(username);
+        List<Recordatorio> allByUsuario_username = recordatorioRepository.findAllByUsuario_UsernameOrderByFechaCreacionDesc(username);
         return recordatorioMapper.toDto(allByUsuario_username);
     }
 
@@ -59,7 +59,7 @@ public class RecordatorioServiceImpl implements RecordatorioService {
 
     @Override
     public RecordatorioDTO obtenerRecordatorio(String username, Long idRecordatorio) throws RecordatorioNotFoundException {
-        Recordatorio byIdAndUsuario_username = recordatorioRepository.findByIdAndUsuario_Username(idRecordatorio, username)
+        Recordatorio byIdAndUsuario_username = recordatorioRepository.findByIdAndUsuario_UsernameOrderByFechaCreacionDesc(idRecordatorio, username)
                 .orElseThrow(() -> new RecordatorioNotFoundException("Recordatorio no encontrado."));
 
         return recordatorioMapper.toDto(byIdAndUsuario_username);
